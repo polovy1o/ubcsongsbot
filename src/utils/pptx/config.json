@@ -1,0 +1,33 @@
+{
+    "off": {
+        "font": "TT Norms Medium",
+        "layout": "LAYOUT_WIDE",
+        "line_break": 40,
+        "background": "#000000",
+        "text_width": 1280,
+        "textbox": {
+            "align": "center",
+            "valign": "top",
+            "color": "#ffffff",
+            "fontSize": 48
+        }
+    },
+    "on": {
+        "font": "TT Norms Bold",
+        "layout": "LAYOUT_WIDE",
+        "line_break": 100,
+        "background": "#6ef618",
+        "text_width": 1280,
+        "textbox": {
+            "fontSize": 48,
+            "h": "98%",
+            "align": "center",
+            "valign": "bottom",
+            "color": "#ffffff",
+            "outline": {
+                "size": 1.5,
+                "color": "#000000"
+            }
+        }
+    }
+}

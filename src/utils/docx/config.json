@@ -1,0 +1,18 @@
+{
+    "general_styles": {
+        "default": {
+            "document": {
+                "run": {
+                    "font": "Arial Nova",
+                    "size": 28
+                }
+            }
+        }
+    },
+    "title_style": {
+        "bold": true,
+        "size": 30
+    },
+    "title_gaps": 1,
+    "section_props": {}
+}
