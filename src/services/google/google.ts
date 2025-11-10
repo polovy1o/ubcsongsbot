@@ -95,7 +95,8 @@ async function getNextTextNumber() {
 async function getAll() {
     const res = await drive.files.list({
         q: `'${process.env.GOOGLE_DRIVE_FOLDER}' in parents and trashed=false`,
-        fields: ' files(id, name, modifiedTime)'
+        fields: ' files(id, name, modifiedTime)',
+        pageSize: 1000
     });
 
     const list = res.data.files;
