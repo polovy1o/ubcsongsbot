@@ -225,75 +225,7 @@ class SongManager {
         delete this.songs[song.id]
         return gsong
     }
-
-
-    /*
-
-"inline_commands": {
-        "online|on": "online", //general and online message
-        "offline|off": "offline", //general and offline message
-        "pdf": "pdf", //general and pdf message
-        "doc|docx|document": "docx", //general and doc message
-        "pp|propresenter": "propresenter", //general
-        "nm|nomarks": "nomarks", //general
-        "copy|cp|cpy": "copy", //general
-        "ncopy": "copyNomarks",//general
-        "pn|pnomarks": "propresenterNomarks",//general
-        "info": "info",//notion
-        "finfo|fullinfo|fi": "fullinfo", //general and notion
-        "fullname|fname|name": "fullname" //name
-    }
-
-
-    */
-
-
-    /*
-    
-    inline queries (diff types)
-    by id
-    by words
-
-
-    
-    */
-
-
 }
-
-/*
-
-    identificator - google id. because google drive is main source
-    
-    Song props:
-    - mongo id?
-    - NotionSong
-    - GoogleSong
-
-    how i will get actual synced data? answer:
-
-    when you get some info -> check modifiedTime (depends what info you need)
-    when you change smth -> change info in manager GoogleSong / NotionSong
-
-
-interface GoogleSong {
-    id: string,
-    name: string,
-    createdTime: string,
-    modifiedTime: string
-}
-
-interface NotionSong {
-    id: string,
-    name: string | null,
-    googleId: string | null,
-    modifiedTime: string,
-    tonality: string | null,
-    chords: string | null,
-    tempo: string | null,
-    dynamic: string | null,
-}
-*/
 
 const manager = new SongManager()
 

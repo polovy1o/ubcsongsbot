@@ -216,7 +216,19 @@ function convertToPPWithoutMarks(content: string) {
 */
 
 function parseSongContent(content: string): string[][] {
-    return content.split('\r\n\r\n').map(block => block.split('\r\n'))
+    const normalized = content.replace(/\r\n|\n\r|\r|\n/g, '\n');
+
+    const paragraphs = normalized
+        .split(/\n{2,}/)
+        .map(block =>
+            block
+                .split(/\n+/)
+                .map(line => line.trim())
+                .filter(line => !!line)
+        )
+        .filter(block => block.length > 0);
+
+    return paragraphs;
 }
 
 function normalizeSongContent(content: string) {
