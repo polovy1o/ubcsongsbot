@@ -8,8 +8,8 @@ import { createPdfBufferFromMany } from "../../../../utils/pdf/pdf.js";
 import { createDOCXBufferSongFromMany } from "../../../../utils/docx/docx.js";
 import * as messages from "../../messages.js"
 import { convertDateToString } from "../../../../utils/swissknife/swissknife.js";
-import { store } from "../../../../state/store.js";
 import { getJoinData, updateJoinData } from "../../../../state/functions.js";
+import { convertContentToProPresenter } from "../../../../utils/text/text.js";
 
 const STATUS_ALREADY_EXCLUDED = 0
 const STATUS_SUCCESSFULLY_EXCLUDED = 1
@@ -56,6 +56,18 @@ export class JoinCommand extends CustomCommand {
                 },
                 sendDocument: messages.sendSongPDF
             },
+            
+            "Об'єднати пісні у ProPresenter": {
+                message: 'Почекайте, формуємо docx файл...',
+                getBuffer: async (songs: Song[]) => {
+                    const buffer = await createDOCXBufferSongFromMany(songs.map(song => ({
+                        title: song.name,
+                        content: convertContentToProPresenter(song.content)
+                    })))
+                    return buffer
+                },
+                sendDocument: messages.sendSongDOCX
+            },
             "Об'єднати пісні у docx": {
                 message: 'Почекайте, формуємо docx файл...',
                 getBuffer: async (songs: Song[]) => {
@@ -74,7 +86,7 @@ export class JoinCommand extends CustomCommand {
                     return buffer
                 },
                 sendDocument: messages.sendSongOffline
-            }
+            },
         }
 
         this.menu = ['Головне меню', ...Object.keys(this.joinTypes)]
@@ -195,7 +207,7 @@ export class JoinCommand extends CustomCommand {
         const userId = message.from?.id.toString() || message.chat.id.toString()
         const data = await this.updateData(userId)
 
-        this.sendSongsKeyboard(bot, userId, data, 'Можете продовжувати додавати пісні')
+        this.sendSongsKeyboard(bot, userId, data, 'Можете продовжувати додавати пісні по назві або:\n@ubcsongsbot запит name')
     }
 
     async onMessage(bot: TelegramBot, message: TelegramBot.Message) {
@@ -245,10 +257,10 @@ export class JoinCommand extends CustomCommand {
             const day = songDate.getDay()
 
             if (day !== 0) {
-                songDate.setDate(songDate.getDate() + (6 - day))
+                songDate.setDate(songDate.getDate() + (7 - day))
             }
 
-            sendDocument({fullName: `Пісні ${convertDateToString(songDate)}`, buffer, userId})
+            sendDocument({fullName: `Пісні на неділю ${convertDateToString(songDate)}`, buffer, userId})
             return
         }
 

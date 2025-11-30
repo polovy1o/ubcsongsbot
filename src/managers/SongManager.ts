@@ -16,9 +16,9 @@ class SongManager {
 
     async start() {
         const googleSongs = await g.getAll()
-        console.log(' - all gsongs getted')
+        console.log(' - got all gsongs')
         const notionSongs = await n.loadSongs(googleSongs)
-        console.log(' - all notion songs getted')
+        console.log(' - got all notion songs ')
 
         for (let googleSong of googleSongs) {
             const id = googleSong.id
@@ -26,7 +26,7 @@ class SongManager {
 
             this.songs[id] = new Song(googleSong, notionSongs[id], content)
         }
-        console.log(' - all songs getted')
+        console.log(' - got all songs')
 
         await loadSongs(Object.values(this.songs))
 

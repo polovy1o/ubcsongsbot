@@ -186,7 +186,7 @@ function normalizeProPresenterBlocks(blocks: string[][][]): string[][] {
     return pairs;
 }
 
-function parseContentForProPresenter(content: string) {
+function parseContentForProPresenter(content: string) { //do more effective???
     const parsedContent = parseSongContent(content)
     const data = parsedContent.map(lines => {
         let slides = []
