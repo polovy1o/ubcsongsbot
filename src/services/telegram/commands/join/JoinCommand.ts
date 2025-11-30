@@ -9,7 +9,7 @@ import { createDOCXBufferSongFromMany } from "../../../../utils/docx/docx.js";
 import * as messages from "../../messages.js"
 import { convertDateToString } from "../../../../utils/swissknife/swissknife.js";
 import { getJoinData, updateJoinData } from "../../../../state/functions.js";
-import { convertContentToProPresenter } from "../../../../utils/text/text.js";
+import { convertContentToProPresenter, textUtilConfig } from "../../../../utils/text/text.js";
 
 const STATUS_ALREADY_EXCLUDED = 0
 const STATUS_SUCCESSFULLY_EXCLUDED = 1
@@ -22,7 +22,8 @@ const STATUS_NOT_FOUND = 5
 interface JoinTypeData {
     getBuffer: Function,
     sendDocument: Function,
-    message: string
+    message: string,
+    filename?: string
 }
 
 export class JoinCommand extends CustomCommand {
@@ -43,7 +44,8 @@ export class JoinCommand extends CustomCommand {
                     const buffer = await joinedSongsOnlineBufferFromContents(songs.map(song => song.content))
                     return buffer
                 },
-                sendDocument: messages.sendSongOnline
+                sendDocument: messages.sendSongOnline,
+                filename: 'Пісні на онлайн {SUNDAY_DATE}'
             },
             "Об'єднати пісні у pdf": {
                 message: 'Почекайте, формуємо pdf файл...',
@@ -54,18 +56,20 @@ export class JoinCommand extends CustomCommand {
                     })))
                     return buffer
                 },
+                filename: 'Пісні на неділю {SUNDAY_DATE}',
                 sendDocument: messages.sendSongPDF
             },
             
-            "Об'єднати пісні у ProPresenter": {
-                message: 'Почекайте, формуємо docx файл...',
+            "Об'єднати пісні у propresenter": {
+                message: 'Почекайте, формуємо docx файл з піснями розділеними для ProPresenter...',
                 getBuffer: async (songs: Song[]) => {
                     const buffer = await createDOCXBufferSongFromMany(songs.map(song => ({
-                        title: song.name,
+                        title: textUtilConfig.is_upper ? song.name.toUpperCase() : song.name,
                         content: convertContentToProPresenter(song.content)
                     })))
                     return buffer
                 },
+                filename: 'Пісні для ProPresenter {SUNDAY_DATE}',
                 sendDocument: messages.sendSongDOCX
             },
             "Об'єднати пісні у docx": {
@@ -77,6 +81,7 @@ export class JoinCommand extends CustomCommand {
                     })))
                     return buffer
                 },
+                filename: 'Пісні на неділю {SUNDAY_DATE}',
                 sendDocument: messages.sendSongDOCX
             },
             "Об'єднати пісні у offline": {
@@ -85,6 +90,7 @@ export class JoinCommand extends CustomCommand {
                     const buffer = await joinedSongsOfflineBufferFromContents(songs.map(song => song.content))
                     return buffer
                 },
+                filename: 'Пісні старого формату {SUNDAY_DATE}',
                 sendDocument: messages.sendSongOffline
             },
         }
@@ -247,7 +253,7 @@ export class JoinCommand extends CustomCommand {
                 return
             }
 
-            const { message: joinMessage, getBuffer, sendDocument } = this.joinTypes[message.text]
+            const { message: joinMessage, getBuffer, sendDocument, filename } = this.joinTypes[message.text]
 
             await bot.sendMessage(userId, joinMessage)
 
@@ -260,7 +266,15 @@ export class JoinCommand extends CustomCommand {
                 songDate.setDate(songDate.getDate() + (7 - day))
             }
 
-            sendDocument({fullName: `Пісні на неділю ${convertDateToString(songDate)}`, buffer, userId})
+            let fullName;
+
+            if (filename) {
+                fullName = filename.replace('{SUNDAY_DATE}', convertDateToString(songDate))
+            } else {
+                fullName = `Пісні на неділю ${convertDateToString(songDate)}`
+            }
+
+            sendDocument({fullName, buffer, userId})
             return
         }
 

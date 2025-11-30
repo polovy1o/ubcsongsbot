@@ -259,6 +259,8 @@ function normalizeSongContent(content: string) {
     return { content, symbols }
 }
 
+const textUtilConfig = config
+
 export {
     getTextNumber,
     setConfigData,
@@ -272,5 +274,6 @@ export {
     lineHalving,
     lineHalvingByI,
     lineHalvingBySep,
-    normalizeSongContent
+    normalizeSongContent,
+    textUtilConfig
 }
